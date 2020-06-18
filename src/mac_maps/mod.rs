@@ -1,7 +1,6 @@
 use std;
 use std::io;
 use std::mem;
-use failure::Error;
 use libc::{c_int, pid_t, strlen};
 use mach::kern_return::{KERN_SUCCESS, kern_return_t};
 use mach::port::{mach_port_name_t, mach_port_t, MACH_PORT_NULL};
@@ -37,7 +36,7 @@ pub struct Symbol {
 fn parse_nm_output(output: &str) -> Vec<Symbol> {
     let mut vec = vec![];
     for line in output.split('\n') {
-        let mut split: Vec<&str> = line.split_whitespace().collect();
+        let split: Vec<&str> = line.split_whitespace().collect();
         let sym = if split.len() == 2 {
             Symbol {
                 value: None,
@@ -59,7 +58,7 @@ fn parse_nm_output(output: &str) -> Vec<Symbol> {
     vec
 }
 
-pub fn get_symbols(filename: &str) -> Result<Vec<Symbol>, Error> {
+pub fn get_symbols(filename: &str) -> io::Result<Vec<Symbol>> {
     let output = std::process::Command::new("nm").arg(filename).output()?;
     Ok(parse_nm_output(&String::from_utf8_lossy(&output.stdout)))
 }
