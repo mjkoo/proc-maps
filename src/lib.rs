@@ -23,12 +23,13 @@
 //! ```
 
 extern crate libc;
-extern crate failure;
 
 #[cfg(target_os = "macos")]
-extern crate mach;
+extern crate failure;
 #[cfg(target_os = "macos")]
 extern crate libproc;
+#[cfg(target_os = "macos")]
+extern crate mach;
 #[cfg(windows)]
 extern crate winapi;
 
@@ -60,5 +61,5 @@ fn map_contain_addr(map: &MapRange, addr: usize) -> bool {
 /// Returns whether or not any MapRange contains the given address
 /// Note: this will only work correctly on OSX and Linux.
 pub fn maps_contain_addr(addr: usize, maps: &[MapRange]) -> bool {
-    maps.iter().any({ |map| map_contain_addr(map, addr) })
+    maps.iter().any(|map| map_contain_addr(map, addr))
 }
